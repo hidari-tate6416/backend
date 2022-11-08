@@ -2,16 +2,16 @@ version: '3'
 
 services:
   app:
-    container_name: insgm-app
+    container_name: tate-app
     ports:
       - "8000:80"
     build: ./Docker/App
     volumes:
-      - ./backend:/var/www/html
+      - ./html:/var/www/html
 
   db:
     image: mysql:5.7
-    container_name: insgm-db
+    container_name: tate-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laraveldb

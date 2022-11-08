@@ -1,5 +1,5 @@
 # insider-game_backend
-Backend repository, for insider_game
+Backend repository, for tate_app
 
 # laravelサイト
 http://localhost:8000/
@@ -8,24 +8,33 @@ http://localhost:8000/
 http://localhost:3000/
 
 # 初回起動
-$ make insgm-build - 以下３コマンドを実行
+$ make backend-build - 以下３コマンドを実行
 $ docker-compose build
 $ docker-compose up -d
 $ docker ps - 3コンテナが起動されているか確認
 
 # laravel導入
-$ docker exec -it insgm-app bash
-$ composer create-project "laravel/laravel=~8.0" --prefer-dist insgm
+$ docker exec -it tate-app bash
+$ composer create-project "laravel/laravel=~8.0" --prefer-dist backend
 
 # DB接続
-$ cd insgm
+html/backend/.envのBD接続内容を書き換える
+***
+DB_CONNECTION=mysql
+DB_HOST=tate-db
+DB_PORT=3306
+DB_DATABASE=laraveldb
+DB_USERNAME=dbuser
+DB_PASSWORD=dbpass
+***
+$ cd backend
 $ php artisan migrate
 
 # appに入る
-$ docker exec -it insgm-app bash
+$ docker exec -it tate-app bash
 
 # dbに入る
-$ docker exec -it insgm-db bash
+$ docker exec -it tate-db bash
 $ mysql -uroot -p (パス: ****)
 
 mysql> show databases; - DBの全体を見る
