@@ -8,6 +8,7 @@ services:
     build: ./Docker/App
     volumes:
       - ./html:/var/www/html
+    working_dir: /var/www/html/backend
 
   db:
     image: mysql:5.7

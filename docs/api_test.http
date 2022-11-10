@@ -1,8 +1,8 @@
-@baseUrl = http://localhost
+@baseUrl = http://localhost:8000
 
 // 初期API
 ###################################################
-POST {{baseUrl}}/api/v1/insider/in HTTP/1.1
+POST {{baseUrl}}/api/insider/ini HTTP/1.1
 Content-Type: application/json
 
 {
