@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Insider;
+namespace App\Models\Ito;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ class Templete extends Model
 {
     use HasFactory;
 
-    protected $table = 'insider_db.' . 'templetes';
+    protected $table = 'ito_db.' . 'templetes';
 
     protected $guarded = ['created_at', 'updated_at'];
 

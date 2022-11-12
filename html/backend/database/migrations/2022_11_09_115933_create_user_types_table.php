@@ -14,9 +14,9 @@ class CreateUserTypesTable extends Migration
     public function up()
     {
         Schema::create('app_db.user_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('type_name');
-            $table->tinyInteger('status');
+            $table->id()->comment('管理者タイプID');
+            $table->string('type_name')->comment('管理者タイプ名');
+            $table->tinyInteger('status')->default(1)->comment('ステータス');
             $table->timestamps();
         });
     }

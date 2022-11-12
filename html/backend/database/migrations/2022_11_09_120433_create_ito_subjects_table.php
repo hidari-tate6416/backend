@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectsTable extends Migration
+class CreateItoSubjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('insider_db.subjects', function (Blueprint $table) {
+        Schema::create('ito_db.subjects', function (Blueprint $table) {
             $table->id()->comment('お題ID');
             $table->integer('templete_id')->default(0)->comment('テンプレートID');
             $table->string('subject_word')->comment('お題ワード');
@@ -31,6 +31,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('insider_db.subjects');
+        Schema::dropIfExists('ito_db.subjects');
     }
 }
