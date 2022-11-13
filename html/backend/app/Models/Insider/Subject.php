@@ -3,9 +3,12 @@
 namespace App\Models\Insider;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+use \App\Models\BaseModel;
+
+class Subject extends BaseModel
 {
     use HasFactory;
 

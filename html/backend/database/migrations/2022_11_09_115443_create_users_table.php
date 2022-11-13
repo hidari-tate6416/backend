@@ -15,11 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('app_db.users', function (Blueprint $table) {
             $table->id()->comment('管理者ID');
-            $table->integer('member_id')->comment('会員ID');
+            $table->bigInteger('member_id')->comment('会員ID');
             $table->integer('user_type_id')->comment('管理者タイプ');
-            $table->integer('user_name')->comment('管理者氏名');
+            $table->string('user_name')->comment('管理者氏名');
             $table->tinyInteger('status')->default(1)->comment('ステータス');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

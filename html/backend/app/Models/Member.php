@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
-class Member extends Model
+use App\Utils\DBU;
+
+class Member extends BaseModel
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'app_db.' . 'members';
     protected $guarded = ['created_at', 'updated_at'];
@@ -22,18 +27,118 @@ class Member extends Model
         return $this->hasMany(\App\Models\Insider::class)->where('status', '=', 1);
     }
 
-    public function login()
+    static function login(Request $request)
     {
-        //
+        $results = array(
+            'token' => '',
+            'user_type' => 0,
+        );
+
+        $login_id = $request->input('login_id');
+        $password = $request->input('password');
+
+        $member = Member::with(['user'])
+            ->where('status', '=', 1)
+            ->where('approved_flag', '=', 1)
+            ->where('login_id', '=', $login_id)
+            ->first();
+
+        if (empty($member) or !password_verify($password, $member->password)) {
+            return $results;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $member->remember_token = generateAccessToken();
+            $member->verified_at = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            $member->last_login_at = date("Y-m-d H:i:s");
+
+            $member->save();
+            DBU::commit();
+
+        }
+        catch (\Exception $e) {
+            DBU::rollBack();
+            return $results;
+        }
+
+        $results['token'] = $member->remember_token;
+
+        // 管理者タイプ
+        if (!empty($member->user)) {
+            $results['user_type'] = $member->user->user_type;
+        }
+
+        return $results;
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        //
+        $result = false;
+
+        $token = $request->bearerToken();
+
+        $member = Member::where('status', '=', 1)
+            ->where('approved_flag', '=', 1)
+            ->where('remember_token', '=', $token)
+            ->first();
+
+        if (empty($member)) {
+            return $result;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $member->remember_token = '';
+            $member->verified_at = null;
+
+            $member->save();
+
+            DBU::commit();
+            $result = true;
+
+        }
+        catch (\Exception $e) {
+            // echo $e;
+            DBU::rollBack();
+            return $result;
+        }
+
+        return $result;
+
     }
 
-    public function auth()
+    public function auth($token)
     {
-        //
+        $member = Member::with(['user'])
+            ->where('status', '=', 1)
+            ->where('approved_flag', '=', 1)
+            ->where('remember_token', '=', $token)
+            ->first();
+
+        if (empty($member)) {
+            return $member;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $member->verified_at = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            $member->last_login_at = date("Y-m-d H:i:s");
+
+            $member->save();
+
+            DBU::commit();
+
+        }
+        catch (\Exception $e) {
+            // echo $e;
+            DBU::rollBack();
+            $member = array();
+        }
+
+        return $member;
     }
 }
