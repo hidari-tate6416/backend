@@ -21,6 +21,7 @@ class CreateItoSubjectsTable extends Migration
             $table->string('max_word')->comment('お題最大ワード');
             $table->tinyInteger('status')->default(1)->comment('ステータス');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

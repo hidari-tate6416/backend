@@ -1,10 +1,31 @@
 @baseUrl = http://localhost:8000
+@token = Bearer yDM3KfqlMiGQVqkYqFYAmQ2lNdZU0wd0xuIE4GNisksUCHMxzJpPfVjWci3X09YM
 
-// 初期API
+// 会員作成
 ###################################################
-POST {{baseUrl}}/api/insider/ini HTTP/1.1
+POST {{baseUrl}}/api/app/create_member HTTP/1.1
 Content-Type: application/json
 
 {
-    "text": tate
+    "member_name": "hiroto",
+    "login_id": "hiroto1234",
+    "password": "123456",
+    "user_login_id": "tate6416",
+    "user_name": "tatemichi"
 }
+
+// ログイン
+###################################################
+POST {{ baseUrl }}/api/app/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "login_id": "tate6416",
+    "password": "tatemiti1"
+}
+
+// ログアウト
+###################################################
+GET {{ baseUrl }}/api/app/logout HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json

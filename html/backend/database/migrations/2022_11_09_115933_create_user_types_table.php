@@ -18,6 +18,7 @@ class CreateUserTypesTable extends Migration
             $table->string('type_name')->comment('管理者タイプ名');
             $table->tinyInteger('status')->default(1)->comment('ステータス');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

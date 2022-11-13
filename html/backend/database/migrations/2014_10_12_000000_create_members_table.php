@@ -21,8 +21,11 @@ class CreateMembersTable extends Migration
             $table->string('password')->comment('パスワード');
             $table->rememberToken()->nullable()->comment('トークン');
             $table->timestamp('last_login_at')->nullable()->comment('最終ログイン日時');
+            $table->bigInteger('user_member_id')->nullable()->comment('招待管理者会員ID');
+            $table->tinyInteger('approved_flag')->default(0)->comment('承認フラグ');
             $table->tinyInteger('status')->default(1)->comment('ステータス');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

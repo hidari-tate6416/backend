@@ -3,9 +3,12 @@
 namespace App\Models\Insider;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Templete extends Model
+use \App\Models\BaseModel;
+
+class Templete extends BaseModel
 {
     use HasFactory;
 

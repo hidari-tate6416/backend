@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\API\MemberController;
 use App\Http\Controllers\API\InsiderController;
+use App\Http\Controllers\API\ItoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +18,28 @@ use App\Http\Controllers\API\InsiderController;
 |
 */
 
+Route::prefix('app')->group(function () {
 
-Route::post('insider/ini', [InsiderController::class, 'ini']);
+    // 会員登録APi
+    Route::post('/create_member', [MemberController::class, 'create_member']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    // ログインAPi
+    Route::post('/login', [MemberController::class, 'login']);
+
+     // ログアウトAPi
+     Route::get('/logout', [MemberController::class, 'logout']);
+});
+
+
+Route::prefix('insider')->group(function () {
+
+    // 初期API
+    Route::post('/ini', [InsiderController::class, 'ini']);
+});
+
+
+Route::prefix('ito')->group(function () {
+
+    // 初期API
+    Route::post('/ini', [ItoController::class, 'ini']);
 });
