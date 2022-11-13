@@ -5,6 +5,8 @@ namespace App\Utils;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Color;
+
 class DBU
 {
     use SoftDeletes;
@@ -47,5 +49,14 @@ class DBU
                 self::$databases[] = $db;
             }
         }
+    }
+
+    static function getColor($color_id)
+    {
+        $color = Color::where('status', '=', 1)
+            ->hidden(['id'])
+            ->find($color_id);
+
+        return $color
     }
 }
