@@ -73,7 +73,7 @@ class Member extends BaseModel
         return $results;
     }
 
-    public function logout(Request $request)
+    static function logout(Request $request)
     {
         $result = false;
 
@@ -110,7 +110,38 @@ class Member extends BaseModel
 
     }
 
-    public function auth($token)
+    static function auth($token)
+    {
+        $member = Member::where('status', '=', 1)
+            ->where('approved_flag', '=', 1)
+            ->where('remember_token', '=', $token)
+            ->first();
+
+        if (empty($member)) {
+            return $member;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $member->verified_at = date("Y-m-d H:i:s", strtotime('+1 hours'));
+            $member->last_login_at = date("Y-m-d H:i:s");
+
+            $member->save();
+
+            DBU::commit();
+
+        }
+        catch (\Exception $e) {
+            // echo $e;
+            DBU::rollBack();
+            $member = array();
+        }
+
+        return $member;
+    }
+
+    static function userAuth($token)
     {
         $member = Member::with(['user'])
             ->where('status', '=', 1)
@@ -118,7 +149,8 @@ class Member extends BaseModel
             ->where('remember_token', '=', $token)
             ->first();
 
-        if (empty($member)) {
+        if (empty($member->user)) {
+            $member = array();
             return $member;
         }
 

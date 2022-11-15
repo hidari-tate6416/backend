@@ -54,9 +54,8 @@ class DBU
     static function getColor($color_id)
     {
         $color = Color::where('status', '=', 1)
-            ->hidden(['id'])
             ->find($color_id);
 
-        return $color
+        return $color;
     }
 }

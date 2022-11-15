@@ -29,3 +29,54 @@ Content-Type: application/json
 GET {{ baseUrl }}/api/app/logout HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
+
+// スコアルーム作成
+###################################################
+POST {{ baseUrl }}/api/app/create_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "default_score": 1000,
+    "room_name": "test",
+    "room_password": "123456",
+    "host_color": 1,
+    "guest1_color": "",
+    "guest2_color": "",
+    "guest3_color": "",
+    "guest4_color": ""
+}
+
+// スコアルーム情報取得
+###################################################
+POST {{ baseUrl }}/api/app/get_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "score_room_id": 1,
+    "member_no": 0
+}
+
+// スコアルーム作成
+###################################################
+POST {{ baseUrl }}/api/app/create_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "default_score": 1000,
+    "room_name": "test",
+    "room_password": "123456",
+    "host_color": 1,
+    "guest1_color": "2",
+    "guest2_color": "3",
+    "guest3_color": "",
+    "guest4_color": ""
+}
+
+// スコアルームリセット
+###################################################
+GET {{ baseUrl }}/api/app/reset_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
