@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Services\AppService;
+use App\Services\MemberService;
 use App\Models\Member;
 
 class MemberController extends Controller
 {
-    // 会員登録APi
+    // 会員登録API
     public function create_member(Request $request) {
         
         try {
-            $service = app()->make('AppService');
+            $service = app()->make('MemberService');
             $ret = $service->createMember($request);
         }
         catch (\Exception $e) {
@@ -30,7 +31,7 @@ class MemberController extends Controller
     }
 
 
-    // ログインAPi
+    // ログインAPI
     public function login(Request $request) {
         
         try {
@@ -51,7 +52,7 @@ class MemberController extends Controller
         return response()->success($result);
     }
 
-    // ログアウトAPi
+    // ログアウトAPI
     public function logout(Request $request) {
         
         try {
