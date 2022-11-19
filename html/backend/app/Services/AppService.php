@@ -69,20 +69,130 @@ class AppService
         return $results;
     }
 
+    public function listScoreRoom()
+    {
+        $results = array(
+            'result' => false,
+            'rooms' => array()
+        );
+
+        $now_date = date("Y-m-d H:i:s");
+        $score_rooms = ScoreRoom::where('status', '=', 1)
+            ->whereNotNull('expired_at')
+            ->get();
+
+        if ($score_rooms->isEmpty()) {
+            $results['result'] = true;
+            return $results;
+        }
+
+        $rooms = array();
+
+        foreach ($score_rooms as $score_room) {
+
+            $rooms[] = array(
+                'room_id' => $score_room->id,
+                'room_name' => $score_room->room_name
+            );
+        }
+
+        $results['result'] = true;
+        $results['rooms'] = $rooms;
+
+        return $results;
+    }
+
     public function getScoreRoom(Request $request)
+    {
+        $results = array(
+            'result' => false,
+            'room' => array()
+        );
+
+        $score_room = ScoreRoom::where('status', '=', 1)
+            ->find($request->input('score_room_id'));
+
+        if (empty($score_room)) {
+            return $results;
+        }
+
+        $guests = array();
+
+        for ($index = 1; $index < 5; $index++) {
+            $guest = array();
+
+            $guest_color_id = 'guest' . (string)$index . '_member_color_id';
+            $guest_member_id = 'guest' . (string)$index . '_member_id';
+
+            if (!empty($score_room->$guest_color_id)) {
+                $guest['member_no'] = $index;
+                $guest['color_id'] = $score_room->$guest_color_id;
+                $guest['use'] = (!empty($score_room->$guest_member_id)) ? true : false;
+
+                $guests[] = $guest;
+            }
+        }
+
+        $room = array(
+            'room_id' => $score_room->id,
+            'guests' => $guests,
+        );
+
+        $results['result'] = true;
+        $results['room'] = $room;
+
+        return $results;
+    }
+
+    public function joinScoreRoom(Request $request, $member_id)
+    {
+        $result = false;
+
+        $score_room_id = $request->input('score_room_id');
+        $member_no = $request->input('member_no');
+        $room_password = $request->input('room_password');
+
+        $score_room = ScoreRoom::where('status', '=', 1)
+            ->where('room_password', '=', $room_password)
+            ->find($score_room_id);
+
+        if (empty($score_room)) {
+            return $result;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $guest_member_id = 'guest' . (string)$member_no . '_member_id';
+            $score_room->$guest_member_id = $member_id;
+            $score_room->save();
+
+            DBU::commit();
+            $result = true;
+
+        }
+        catch (\Exception $e) {
+            DBU::rollBack();
+            // echo $e;
+            return $result;
+        }
+
+        return $result;
+    }
+
+    public function getDetailScoreRoom(Request $request)
     {
         $result = array();
         $member_no = $request->input('member_no');
         $now_date = date("Y-m-d H:i:s");
 
-        $score_room = ScoreRoom::whereDate('expired_at', '>=', $now_date)
-            ->find($request->input('score_room_id'));
+        $score_room = ScoreRoom::find($request->input('score_room_id'));
 
-        if (empty($score_room) or $member_no > 4 or $member_no < 0) {
+        if (empty($score_room) or $score_room->expired_at < $now_date or $member_no > 4 or $member_no < 0) {
             return $result;
         }
 
-        $save = $this->updateSoreRoom($score_room);
+        $save = $this->updateScoreRoom($score_room);
         if (!$save) {
             return $result;
         }
@@ -132,7 +242,7 @@ class AppService
         return $result;
     }
 
-    public function updateSoreRoom($score_room)
+    public function updateScoreRoom($score_room)
     {
         $result = false;
 
@@ -156,7 +266,10 @@ class AppService
 
     public function resetScoreRoom()
     {
-        $result = false;
+        $results = array(
+            'result' => false,
+            'empty_room' => 0
+        );
 
         $now_date = date("Y-m-d H:i:s");
         $score_rooms = ScoreRoom::where('status', '=', 1)
@@ -164,8 +277,14 @@ class AppService
             ->get();
 
         if ($score_rooms->isEmpty()) {
-            $result = true;
-            return $result;
+            
+            $score_room = ScoreRoom::where('status', '=', 1)
+                ->whereNull('expired_at')
+                ->count();
+    
+            $results['result'] = true;
+            $results['empty_room'] = $score_room;
+            return $results;
         }
 
         try {
@@ -194,6 +313,57 @@ class AppService
 
                 $score_room->save();
             }
+
+            DBU::commit();
+            $results['result'] = true;
+
+        }
+        catch (\Exception $e) {
+            DBU::rollBack();
+            // echo $e;
+            return $results;
+        }
+
+        $score_room = ScoreRoom::where('status', '=', 1)
+            ->whereNull('expired_at')
+            ->count();
+
+        $results['empty_room'] = $score_room;
+
+        return $results;
+    }
+
+    public function logoutScoreRoom(Request $request, $member_id)
+    {
+        $result = false;
+
+        $score_room = ScoreRoom::where('host_member_id', '=', $member_id)
+            ->find($request->input('score_room_id'));
+
+        if (empty($score_room)) {
+            return $result;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $score_room->room_name = null;
+            $score_room->room_password = null;
+            $score_room->expired_at = null;
+            $score_room->host_member_id = null;
+            $score_room->host_member_color_id = 0;
+            $score_room->guest1_member_color_id = 0;
+            $score_room->guest2_member_color_id = 0;
+            $score_room->guest3_member_color_id = 0;
+            $score_room->guest4_member_color_id = 0;
+            $score_room->default_score = 0;
+            $score_room->host_member_score = 0;
+            $score_room->guest1_member_score = 0;
+            $score_room->guest2_member_score = 0;
+            $score_room->guest3_member_score = 0;
+            $score_room->guest4_member_score = 0;
+
+            $score_room->save();
 
             DBU::commit();
             $result = true;
