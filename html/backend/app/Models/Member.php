@@ -141,7 +141,7 @@ class Member extends BaseModel
         return $member;
     }
 
-    static function userAuth($token)
+    static function userAuth($token, $min_user_type = 4)
     {
         $member = Member::with(['user'])
             ->where('status', '=', 1)
@@ -149,7 +149,7 @@ class Member extends BaseModel
             ->where('remember_token', '=', $token)
             ->first();
 
-        if (empty($member->user)) {
+        if (empty($member->user) or $min_user_type <= $member->user->user_type_id) {
             $member = array();
             return $member;
         }

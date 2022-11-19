@@ -41,15 +41,39 @@ Content-Type: application/json
     "room_name": "test",
     "room_password": "123456",
     "host_color": 1,
-    "guest1_color": "",
-    "guest2_color": "",
-    "guest3_color": "",
-    "guest4_color": ""
+    "guest1_color": "2",
+    "guest2_color": "3",
+    "guest3_color": "4",
+    "guest4_color": "5"
 }
+
+// スコアルーム一覧
+###################################################
+GET {{ baseUrl }}/api/app/list_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
 
 // スコアルーム情報取得
 ###################################################
-POST {{ baseUrl }}/api/app/get_score_room HTTP/1.1
+GET {{ baseUrl }}/api/app/get_score_room?score_room_id=1 HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+// スコアルーム参加
+###################################################
+POST {{ baseUrl }}/api/app/join_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "score_room_id": 1,
+    "member_no": 1,
+    "room_password": "123456"
+}
+
+// スコアルーム詳細取得
+###################################################
+POST {{ baseUrl }}/api/app/get_detail_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
@@ -58,25 +82,14 @@ Content-Type: application/json
     "member_no": 0
 }
 
-// スコアルーム作成
-###################################################
-POST {{ baseUrl }}/api/app/create_score_room HTTP/1.1
-Authorization: {{ token }}
-Content-Type: application/json
-
-{
-    "default_score": 1000,
-    "room_name": "test",
-    "room_password": "123456",
-    "host_color": 1,
-    "guest1_color": "2",
-    "guest2_color": "3",
-    "guest3_color": "",
-    "guest4_color": ""
-}
-
 // スコアルームリセット
 ###################################################
 GET {{ baseUrl }}/api/app/reset_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+// スコアルームログアウト
+###################################################
+GET {{ baseUrl }}/api/app/logout_score_room?score_room_id=2 HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json

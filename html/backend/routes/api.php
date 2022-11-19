@@ -33,11 +33,23 @@ Route::prefix('app')->group(function () {
     // スコアルーム作成API
     Route::post('/create_score_room', [AppController::class, 'create_score_room']);
 
+    // スコアルーム一覧API
+    Route::get('/list_score_room', [AppController::class, 'list_score_room']);
+
     // スコアルーム情報取得API
-    Route::post('/get_score_room', [AppController::class, 'get_score_room']);
+    Route::get('/get_score_room', [AppController::class, 'get_score_room']);
+
+    // スコアルーム参加API
+    Route::post('/join_score_room', [AppController::class, 'join_score_room']);
+
+    // スコアルーム詳細取得API
+    Route::post('/get_detail_score_room', [AppController::class, 'get_detail_score_room']);
 
     // スコアルームリセットAPI
     Route::get('/reset_score_room', [AppController::class, 'reset_score_room']);
+
+    // スコアルームログアウトAPI
+    Route::get('/logout_score_room', [AppController::class, 'logout_score_room']);
 });
 
 
