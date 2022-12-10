@@ -1,9 +1,17 @@
-@baseUrl = http://localhost:8000
-@token = Bearer yDM3KfqlMiGQVqkYqFYAmQ2lNdZU0wd0xuIE4GNisksUCHMxzJpPfVjWci3X09YM
+@name = hidari-tate
+
+# ローカル
+# @baseUrl = http://localhost:8000/api
+# ステージング
+@baseUrl = http://163.44.254.176:80/api
+# プロダクト
+# @baseUrl = http://163.44.253.210:80/api
+
+@token = Bearer xNh21dlO2cQ9bEND2cNHZIk5zrqHhbpR69txPOwoWEPag4bBCnfSkB21pGNYv63k
 
 // 会員作成
 ###################################################
-POST {{baseUrl}}/api/app/create_member HTTP/1.1
+POST {{baseUrl}}/app/create_member HTTP/1.1
 Content-Type: application/json
 
 {
@@ -16,7 +24,7 @@ Content-Type: application/json
 
 // ログイン
 ###################################################
-POST {{ baseUrl }}/api/app/login HTTP/1.1
+POST {{ baseUrl }}/app/login HTTP/1.1
 Content-Type: application/json
 
 {
@@ -26,13 +34,19 @@ Content-Type: application/json
 
 // ログアウト
 ###################################################
-GET {{ baseUrl }}/api/app/logout HTTP/1.1
+GET {{ baseUrl }}/app/logout HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+// マイページトップ会員情報取得
+###################################################
+GET {{ baseUrl }}/app/get_top_profile HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
 // スコアルーム作成
 ###################################################
-POST {{ baseUrl }}/api/app/create_score_room HTTP/1.1
+POST {{ baseUrl }}/app/create_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
@@ -49,19 +63,19 @@ Content-Type: application/json
 
 // スコアルーム一覧
 ###################################################
-GET {{ baseUrl }}/api/app/list_score_room HTTP/1.1
+GET {{ baseUrl }}/app/list_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
 // スコアルーム情報取得
 ###################################################
-GET {{ baseUrl }}/api/app/get_score_room?score_room_id=1 HTTP/1.1
+GET {{ baseUrl }}/app/get_score_room?score_room_id=1 HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
 // スコアルーム参加
 ###################################################
-POST {{ baseUrl }}/api/app/join_score_room HTTP/1.1
+POST {{ baseUrl }}/app/join_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
@@ -73,7 +87,7 @@ Content-Type: application/json
 
 // スコアルーム詳細取得
 ###################################################
-POST {{ baseUrl }}/api/app/get_detail_score_room HTTP/1.1
+POST {{ baseUrl }}/app/get_detail_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
@@ -84,12 +98,28 @@ Content-Type: application/json
 
 // スコアルームリセット
 ###################################################
-GET {{ baseUrl }}/api/app/reset_score_room HTTP/1.1
+GET {{ baseUrl }}/app/reset_score_room HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
 // スコアルームログアウト
 ###################################################
-GET {{ baseUrl }}/api/app/logout_score_room?score_room_id=2 HTTP/1.1
+GET {{ baseUrl }}/app/logout_score_room?score_room_id=1 HTTP/1.1
 Authorization: {{ token }}
+Content-Type: application/json
+
+// スコアルームゲストログアウト
+###################################################
+POST {{ baseUrl }}/app/logout_guest_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "score_room_id": 1,
+    "member_no": 1
+}
+
+// 動作確認
+###################################################
+GET {{ baseUrl }}/insider/ini HTTP/1.1
 Content-Type: application/json

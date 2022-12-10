@@ -9,7 +9,7 @@ use App\Models\Member;
 use App\Models\User;
 use App\Models\UserType;
 
-class MemberService 
+class MemberService
 {
     public function createMember(Request $request)
     {
@@ -76,6 +76,28 @@ class MemberService
         catch (\Exception $e) {
             DBU::rollBack();
         }
+
+        return $results;
+    }
+
+    public function getTopProfile($auth)
+    {
+        $results = array(
+            'result' => false,
+            'name' => $auth->name,
+            'user_type_id' => 0
+        );
+
+        $member_id = $auth->id;
+        $user = User::where('member_id', '=', $member_id)
+            ->where('status', '=', 1)
+            ->first();
+
+        if (!empty($user)) {
+            $results['user_type_id'] = $user->user_type_id;
+        }
+
+        $results['result'] = true;
 
         return $results;
     }

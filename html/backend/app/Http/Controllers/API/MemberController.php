@@ -70,4 +70,31 @@ class MemberController extends Controller
 
         return response()->success($result);
     }
+
+    // マイページトップ会員情報取得API
+    public function get_top_profile(Request $request) {
+
+        $auth = Member::auth($request->bearerToken());
+        if (empty($auth)) {
+            return response()->unauthorized();
+        }
+
+        try {
+            $service = app()->make('MemberService');
+            $ret = $service->getTopProfile($auth);
+        }
+        catch (\Exception $e) {
+            echo $e;
+        }
+
+        $ret_str = (!empty($ret['result'])) ? 'OK' : 'NG';
+
+        $result = array(
+            "result" => $ret_str,
+            "name" => $ret['name'],
+            "user_type_id" => $ret['user_type_id']
+        );
+
+        return response()->success($result);
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Color;
+use App\Models\Member;
 
 class DBU
 {
@@ -57,5 +58,13 @@ class DBU
             ->find($color_id);
 
         return $color;
+    }
+
+    static function getName($member_id)
+    {
+        $member = Member::where('status', '=', 1)
+            ->find($member_id);
+
+        return $member->name;
     }
 }
