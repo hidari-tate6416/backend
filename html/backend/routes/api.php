@@ -30,6 +30,9 @@ Route::prefix('app')->group(function () {
     // ログアウトAPI
     Route::get('/logout', [MemberController::class, 'logout']);
 
+    // マイページトップ会員情報取得API
+    Route::get('/get_top_profile', [MemberController::class, 'get_top_profile']);
+
     // スコアルーム作成API
     Route::post('/create_score_room', [AppController::class, 'create_score_room']);
 
@@ -50,18 +53,21 @@ Route::prefix('app')->group(function () {
 
     // スコアルームログアウトAPI
     Route::get('/logout_score_room', [AppController::class, 'logout_score_room']);
+
+    // スコアルームゲストログアウトAPI
+    Route::post('/logout_guest_score_room', [AppController::class, 'logout_guest_score_room']);
 });
 
 
 Route::prefix('insider')->group(function () {
 
     // 初期API
-    Route::post('/ini', [InsiderController::class, 'ini']);
+    Route::get('/ini', [InsiderController::class, 'ini']);
 });
 
 
 Route::prefix('ito')->group(function () {
 
     // 初期API
-    Route::post('/ini', [ItoController::class, 'ini']);
+    Route::get('/ini', [ItoController::class, 'ini']);
 });

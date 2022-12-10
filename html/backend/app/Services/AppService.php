@@ -125,9 +125,9 @@ class AppService
             $guest_member_id = 'guest' . (string)$index . '_member_id';
 
             if (!empty($score_room->$guest_color_id)) {
-                $guest['member_no'] = $index;
-                $guest['color_id'] = $score_room->$guest_color_id;
                 $guest['use'] = (!empty($score_room->$guest_member_id)) ? true : false;
+                $guest['member_no'] = $index;
+                $guest['color_id'] = DBU::getColor($score_room->$guest_color_id);
 
                 $guests[] = $guest;
             }
@@ -219,17 +219,26 @@ class AppService
                 continue;
             }
 
+            $member_name = '';
+
             if (0 == $index) {
+                $member_name = DBU::getName($score_room->host_member_id);
                 $other_member[$index] = [
+                    "name" => $member_name,
                     "score" => $score_room->host_member_score,
                     "color" => DBU::getColor($score_room->host_member_color_id)
                 ];
             }
             else {
+                $other_member_id = 'guest' . (string)$index . '_member_id';
+                if (!empty($score_room->$other_member_id)) {
+                    $member_name = DBU::getName($score_room->$other_member_id);
+                }
                 $other_member_color_id = 'guest' . (string)$index . '_member_color_id';
                 $other_member_score = 'guest' . (string)$index . '_member_score';
                 if (!empty($score_room->$other_member_color_id)) {
                     $other_member[$index] = [
+                        "name" => $member_name,
                         "score" => $score_room->$other_member_score,
                         "color" => DBU::getColor($score_room->$other_member_color_id)
                     ];
@@ -299,6 +308,10 @@ class AppService
                 $score_room->room_password = null;
                 $score_room->expired_at = null;
                 $score_room->host_member_id = null;
+                $score_room->guest1_member_id = null;
+                $score_room->guest2_member_id = null;
+                $score_room->guest3_member_id = null;
+                $score_room->guest4_member_id = null;
                 $score_room->host_member_color_id = 0;
                 $score_room->guest1_member_color_id = 0;
                 $score_room->guest2_member_color_id = 0;
@@ -351,6 +364,10 @@ class AppService
             $score_room->room_password = null;
             $score_room->expired_at = null;
             $score_room->host_member_id = null;
+            $score_room->guest1_member_id = null;
+            $score_room->guest2_member_id = null;
+            $score_room->guest3_member_id = null;
+            $score_room->guest4_member_id = null;
             $score_room->host_member_color_id = 0;
             $score_room->guest1_member_color_id = 0;
             $score_room->guest2_member_color_id = 0;
@@ -362,6 +379,41 @@ class AppService
             $score_room->guest2_member_score = 0;
             $score_room->guest3_member_score = 0;
             $score_room->guest4_member_score = 0;
+
+            $score_room->save();
+
+            DBU::commit();
+            $result = true;
+
+        }
+        catch (\Exception $e) {
+            DBU::rollBack();
+            // echo $e;
+            return $result;
+        }
+
+        return $result;
+    }
+
+    public function logoutGuestScoreRoom(Request $request, $member_id)
+    {
+        $result = false;
+        $member_no = $request->input('member_no');
+
+        $score_room = ScoreRoom::find($request->input('score_room_id'));
+
+        if (empty($score_room)) {
+            return $result;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $other_member_id = 'guest' . (string)$member_no . '_member_id';
+            $other_member_score = 'guest' . (string)$member_no . '_member_score';
+
+            $score_room->$other_member_id = null;
+            $score_room->$other_member_score = $score_room->default_score;
 
             $score_room->save();
 

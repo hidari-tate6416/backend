@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:8.1-apache
 
 ADD php.ini /usr/local/etc/php/
 ADD 000-default.conf /etc/apache2/sites-enabled/

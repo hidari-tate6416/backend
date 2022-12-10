@@ -36,6 +36,10 @@ $ docker exec -it tate-app bash
 # dbに入る
 $ docker exec -it tate-db bash
 $ mysql -uroot -p (パス: ****)
+$ mysql -u root -p
+> CREATE USER 'dbuser'@'192.168.240.3' IDENTIFIED BY 'dbpass';
+> GRANT ALL ON *.* TO 'dbuser'@'192.168.240.3';
+> FLUSH PRIVILEGES;
 
 mysql> show databases; - DBの全体を見る
 mysql> show tables; - テーブルの全体を見る

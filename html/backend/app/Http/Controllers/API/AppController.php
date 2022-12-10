@@ -190,4 +190,29 @@ class AppController extends Controller
 
         return response()->success($result);
     }
+
+    // スコアルームゲストログアウトAPI
+    public function logout_guest_score_room(Request $request) {
+
+        $user_auth = Member::userAuth($request->bearerToken());
+        if (empty($user_auth)) {
+            return response()->unauthorized();
+        }
+        
+        try {
+            $service = app()->make('AppService');
+            $ret = $service->logoutGuestScoreRoom($request, $user_auth->id);
+        }
+        catch (\Exception $e) {
+            // echo $e;
+        }
+
+        $ret_str = (!empty($ret)) ? 'OK' : 'NG';
+
+        $result = array(
+            "result" => $ret_str
+        );
+
+        return response()->success($result);
+    }
 }
