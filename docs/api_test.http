@@ -7,7 +7,7 @@
 # プロダクト
 # @baseUrl = http://163.44.253.210:80/api
 
-@token = Bearer xNh21dlO2cQ9bEND2cNHZIk5zrqHhbpR69txPOwoWEPag4bBCnfSkB21pGNYv63k
+@token = Bearer Z5vtDT9gffd9G2DF99Bt8TlP2wAXinb8ngyZPfgiHE1IhhoKqqtVTydEu5yqDNsG
 
 // 会員作成
 ###################################################
@@ -16,8 +16,8 @@ Content-Type: application/json
 
 {
     "member_name": "hiroto",
-    "login_id": "hiroto1234",
-    "password": "123456",
+    "login_id": "hiroto",
+    "password": "hiroto",
     "user_login_id": "tate6416",
     "user_name": "tatemichi"
 }
@@ -28,8 +28,8 @@ POST {{ baseUrl }}/app/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "login_id": "tate6416",
-    "password": "tatemiti1"
+    "login_id": "hiroto",
+    "password": "hiroto"
 }
 
 // ログアウト
@@ -44,6 +44,7 @@ GET {{ baseUrl }}/app/get_top_profile HTTP/1.1
 Authorization: {{ token }}
 Content-Type: application/json
 
+
 // スコアルーム作成
 ###################################################
 POST {{ baseUrl }}/app/create_score_room HTTP/1.1
@@ -52,7 +53,7 @@ Content-Type: application/json
 
 {
     "default_score": 1000,
-    "room_name": "test",
+    "room_name": "test01",
     "room_password": "123456",
     "host_color": 1,
     "guest1_color": "2",
@@ -60,6 +61,12 @@ Content-Type: application/json
     "guest3_color": "4",
     "guest4_color": "5"
 }
+
+// スコアルーム作成画面項目
+###################################################
+GET {{ baseUrl }}/app/menu/create_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
 
 // スコアルーム一覧
 ###################################################

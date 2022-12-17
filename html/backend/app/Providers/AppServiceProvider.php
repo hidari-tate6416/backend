@@ -8,6 +8,7 @@ use App\Services\MemberService;
 use App\Services\AppService;
 use App\Services\ItoService;
 use App\Services\InsiderService;
+use App\Services\MenuService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('AppService', AppService::class);
         $this->app->singleton('ItoService', ItoService::class);
         $this->app->singleton('InsiderService', InsiderService::class);
+        $this->app->singleton('MenuService', MenuService::class);
     }
 
     /**
