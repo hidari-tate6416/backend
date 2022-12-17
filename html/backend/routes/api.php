@@ -7,6 +7,7 @@ use App\Http\Controllers\API\MemberController;
 use App\Http\Controllers\API\AppController;
 use App\Http\Controllers\API\InsiderController;
 use App\Http\Controllers\API\ItoController;
+use App\Http\Controllers\API\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::prefix('app')->group(function () {
 
     // スコアルーム作成API
     Route::post('/create_score_room', [AppController::class, 'create_score_room']);
+
+    // スコアルーム作成画面項目API
+    Route::get('/menu/create_score_room', [MenuController::class, 'create_score_room']);
 
     // スコアルーム一覧API
     Route::get('/list_score_room', [AppController::class, 'list_score_room']);
