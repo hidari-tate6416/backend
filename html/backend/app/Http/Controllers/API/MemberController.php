@@ -13,7 +13,7 @@ class MemberController extends Controller
 {
     // 会員登録API
     public function create_member(Request $request) {
-        
+
         try {
             $service = app()->make('MemberService');
             $ret = $service->createMember($request);
@@ -33,12 +33,12 @@ class MemberController extends Controller
 
     // ログインAPI
     public function login(Request $request) {
-        
+
         try {
             $ret = Member::login($request);
         }
         catch (\Exception $e) {
-            echo $e;
+            // echo $e;
         }
 
         $ret_str = !empty($ret['token']) ? 'OK' : 'NG';
@@ -54,12 +54,12 @@ class MemberController extends Controller
 
     // ログアウトAPI
     public function logout(Request $request) {
-        
+
         try {
             $ret = Member::logout($request);
         }
         catch (\Exception $e) {
-            echo $e;
+            // echo $e;
         }
 
         $ret_str = !empty($ret) ? 'OK' : 'NG';
@@ -84,7 +84,7 @@ class MemberController extends Controller
             $ret = $service->getTopProfile($auth);
         }
         catch (\Exception $e) {
-            echo $e;
+            // echo $e;
         }
 
         $ret_str = (!empty($ret['result'])) ? 'OK' : 'NG';
