@@ -52,6 +52,9 @@ Route::prefix('app')->group(function () {
     // スコアルーム詳細取得API
     Route::post('/get_detail_score_room', [AppController::class, 'get_detail_score_room']);
 
+    // スコアルーム・スコア更新API
+    Route::post('/update_score_room', [AppController::class, 'update_score_room']);
+
     // スコアルームリセットAPI
     Route::get('/reset_score_room', [AppController::class, 'reset_score_room']);
 

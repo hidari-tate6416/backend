@@ -1,9 +1,9 @@
 @name = hidari-tate
 
 # ローカル
-# @baseUrl = http://localhost:8000/api
+@baseUrl = http://localhost:8000/api
 # ステージング
-@baseUrl = http://163.44.254.176:80/api
+# @baseUrl = http://163.44.254.176:80/api
 # プロダクト
 # @baseUrl = http://163.44.253.210:80/api
 
@@ -28,8 +28,8 @@ POST {{ baseUrl }}/app/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "login_id": "hiroto",
-    "password": "hiroto"
+    "login_id": "tate6416",
+    "password": "tatemiti1"
 }
 
 // ログアウト
@@ -52,14 +52,14 @@ Authorization: {{ token }}
 Content-Type: application/json
 
 {
-    "default_score": 1000,
+    "default_score": 100,
     "room_name": "test01",
     "room_password": "123456",
     "host_color": 1,
     "guest1_color": "2",
     "guest2_color": "3",
-    "guest3_color": "4",
-    "guest4_color": "5"
+    "guest3_color": "",
+    "guest4_color": ""
 }
 
 // スコアルーム作成画面項目
@@ -100,7 +100,18 @@ Content-Type: application/json
 
 {
     "score_room_id": 1,
-    "member_no": 0
+    "member_no": 1
+}
+
+// スコアルーム・スコア更新
+###################################################
+POST {{ baseUrl }}/app/update_score_room HTTP/1.1
+Authorization: {{ token }}
+Content-Type: application/json
+
+{
+    "score_room_id": 1,
+    "scores": [-500, 500, 0, 0, 0]
 }
 
 // スコアルームリセット

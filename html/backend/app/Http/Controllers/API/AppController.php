@@ -13,11 +13,11 @@ class AppController extends Controller
     // スコアルーム作成API
     public function create_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->createScoreRoom($request, $user_auth->id);
@@ -39,11 +39,11 @@ class AppController extends Controller
     // スコアルーム一覧API
     public function list_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->listScoreRoom();
@@ -65,11 +65,11 @@ class AppController extends Controller
     // スコアルーム情報取得API
     public function get_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->getScoreRoom($request);
@@ -91,11 +91,11 @@ class AppController extends Controller
     // スコアルーム参加API
     public function join_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->joinScoreRoom($request, $user_auth->id);
@@ -116,11 +116,11 @@ class AppController extends Controller
     // スコアルーム情報取得API
     public function get_detail_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->getDetailScoreRoom($request);
@@ -139,15 +139,41 @@ class AppController extends Controller
         return response()->success($result);
     }
 
+    // スコアルーム・スコア更新API
+    public function update_score_room(Request $request) {
+
+        $user_auth = Member::auth($request->bearerToken());
+        if (empty($user_auth)) {
+            return response()->unauthorized();
+        }
+
+        try {
+            $service = app()->make('AppService');
+            $ret = $service->updateScoreRoom($request);
+        }
+        catch (\Exception $e) {
+            // echo $e;
+        }
+
+        $ret_str = (!empty($ret['result'])) ? 'OK' : 'NG';
+
+        $result = array(
+            "result" => $ret_str,
+            "difference_score" => (!empty($ret['difference_score'])) ? $ret['difference_score'] : 0
+        );
+
+        return response()->success($result);
+    }
+
 
     // スコアルームリセットAPI
     public function reset_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->resetScoreRoom();
@@ -169,11 +195,11 @@ class AppController extends Controller
     // スコアルームログアウトAPI
     public function logout_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->logoutScoreRoom($request, $user_auth->id);
@@ -194,11 +220,11 @@ class AppController extends Controller
     // スコアルームゲストログアウトAPI
     public function logout_guest_score_room(Request $request) {
 
-        $user_auth = Member::userAuth($request->bearerToken());
+        $user_auth = Member::auth($request->bearerToken());
         if (empty($user_auth)) {
             return response()->unauthorized();
         }
-        
+
         try {
             $service = app()->make('AppService');
             $ret = $service->logoutGuestScoreRoom($request, $user_auth->id);

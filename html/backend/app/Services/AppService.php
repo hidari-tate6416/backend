@@ -192,7 +192,7 @@ class AppService
             return $result;
         }
 
-        $save = $this->updateScoreRoom($score_room);
+        $save = $this->updateScoreRoomExp($score_room);
         if (!$save) {
             return $result;
         }
@@ -251,7 +251,66 @@ class AppService
         return $result;
     }
 
-    public function updateScoreRoom($score_room)
+    public function updateScoreRoom(Request $request)
+    {
+        $results = array();
+
+        $scores = $request->input('scores');
+        $now_date = date("Y-m-d H:i:s");
+
+        $score_room = ScoreRoom::find($request->input('score_room_id'));
+
+        if (empty($score_room) or $score_room->expired_at < $now_date) {
+            return $results;
+        }
+
+        $save = $this->updateScoreRoomExp($score_room);
+        if (!$save) {
+            return $results;
+        }
+
+        try {
+            DBU::beginTransaction();
+
+            $total_score = 0;
+            $total_member = 0;
+            foreach ($scores as $key => $score) {
+                if (0 == $key) {
+                    $score_room->host_member_score = $score_room->host_member_score + $score;
+                    $total_member++;
+                    $total_score += $score_room->host_member_score;
+                }
+                else {
+                    $member_score = 'guest' . (string)$key . '_member_score';
+                    $score_room->$member_score = $score_room->$member_score + $score;
+
+                    $other_member_color_id = 'guest' . (string)$key . '_member_color_id';
+                    if (!empty($score_room->$other_member_color_id)) {
+                        $total_member++;
+                    }
+                    $total_score += $score_room->$member_score;
+                }
+
+                $score_room->save();
+            }
+
+            DBU::commit();
+            $results['result'] = true;
+
+            $true_total_score = $score_room->default_score * $total_member;
+            $results['difference_score'] = $total_score - $true_total_score;
+
+        }
+        catch (\Exception $e) {
+            DBU::rollBack();
+            // echo $e;
+            return $results;
+        }
+
+        return $results;
+    }
+
+    public function updateScoreRoomExp($score_room)
     {
         $result = false;
 
