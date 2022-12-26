@@ -202,13 +202,17 @@ class AppService
 
         if (0 == $member_no) {
             $result['my_score'] = $score_room->host_member_score;
-            $result['my_color'] = DBU::getColor($score_room->host_member_color_id);
+            $my_color = DBU::getColor($score_room->host_member_color_id);
+            $result['my_color'] = 'bg-' . $my_color['name_en'] . (('white' != $my_color['name_en'] and 'black' != $my_color['name_en']) ? '-500' : '');
+            $result['my_text_color'] = 'text-' . $my_color['text_color_name_en'];
         }
         else {
             $member_color_id = 'guest' . (string)$member_no . '_member_color_id';
             $member_score = 'guest' . (string)$member_no . '_member_score';
             $result['my_score'] = $score_room->$member_score;
-            $result['my_color'] = DBU::getColor($score_room->$member_color_id);
+            $my_color = DBU::getColor($score_room->$member_color_id);
+            $result['my_color'] = 'bg-' . $my_color['name_en'] . (('white' != $my_color['name_en'] and 'black' != $my_color['name_en']) ? '-500' : '');
+            $result['my_text_color'] = 'text-' . $my_color['text_color_name_en'];
         }
 
         $other_member = array();
@@ -223,10 +227,13 @@ class AppService
 
             if (0 == $index) {
                 $member_name = DBU::getName($score_room->host_member_id);
-                $other_member[$index] = [
+                $member_color = DBU::getColor($score_room->host_member_color_id);
+                $other_member[] = [
+                    "member_no" => $index,
                     "name" => $member_name,
                     "score" => $score_room->host_member_score,
-                    "color" => DBU::getColor($score_room->host_member_color_id)
+                    "color" => 'bg-' . $member_color['name_en'] . (('white' != $member_color['name_en'] and 'black' != $member_color['name_en']) ? '-500' : ''),
+                    "text_color" => 'text-' . $member_color['text_color_name_en']
                 ];
             }
             else {
@@ -237,10 +244,13 @@ class AppService
                 $other_member_color_id = 'guest' . (string)$index . '_member_color_id';
                 $other_member_score = 'guest' . (string)$index . '_member_score';
                 if (!empty($score_room->$other_member_color_id)) {
-                    $other_member[$index] = [
+                    $member_color = DBU::getColor($score_room->$other_member_color_id);
+                    $other_member[] = [
+                        "member_no" => $index,
                         "name" => $member_name,
                         "score" => $score_room->$other_member_score,
-                        "color" => DBU::getColor($score_room->$other_member_color_id)
+                        "color" => 'bg-' . $member_color['name_en'] . (('white' != $member_color['name_en'] and 'black' != $member_color['name_en']) ? '-500' : ''),
+                        "text_color" => 'text-' . $member_color['text_color_name_en']
                     ];
                 }
             }

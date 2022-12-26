@@ -100,7 +100,7 @@ Content-Type: application/json
 
 {
     "score_room_id": 1,
-    "member_no": 1
+    "member_no": 0
 }
 
 // スコアルーム・スコア更新
